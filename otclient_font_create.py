@@ -4,14 +4,14 @@
 
 from gimpfu import *
 
-def otclient_font_create(font, size, height, width, color) :
+def otclient_font_create(cp, font, size, height, width, antialias, color) :
     # New image
     image = gimp.Image(16*width, 14*height, RGB)
 
     # Text color
     gimp.set_foreground(color)
 
-    charTableNr = [
+    cp1250 = [
         32, 33, 34, 35, 36, 37, 38, 39,
         40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
         50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
@@ -33,13 +33,42 @@ def otclient_font_create(font, size, height, width, color) :
         273, 324, 328, 243, 244, 337, 246, 247, 345, 367, 250, 369, 252, 253, 355, 729
     ]
 
+    cp1252 = [
+        32, 33, 34, 35, 36, 37, 38, 39,
+        40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+        50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
+        60, 61, 62, 63, 64, 65, 66, 67, 68, 69,
+        70, 71, 72, 73, 74, 75, 76, 77, 78, 79,
+        80, 81, 82, 83, 84, 85, 86, 87, 88, 89,
+        90, 91, 92, 93, 94, 95, 96, 97, 98, 99,
+        100, 101, 102, 103, 104, 105, 106, 107, 108, 109,
+        110, 111, 112, 113, 114, 115, 116, 117, 118, 119,
+        120, 121, 122, 123, 124, 125, 126,
+        9633,
+        8364, 9633, 8218, 402, 8222, 8230, 8224, 225, 710, 8240, 352, 8249, 338, 9633, 381, 9633,
+        9633, 8216, 8217, 8220, 8221, 8226, 8211, 8212, 732, 8482, 353, 8250, 339, 9633, 382, 376,
+        32, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 32, 174, 175,
+        176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191,
+        192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207,
+        208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223,
+        224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239,
+        240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255
+    ]
+
+    charTableNr = []
+
+    if cp == 0:
+        charTableNr = cp1252
+    elif cp == 1:
+        charTableNr = cp1250
+
     charNr = 0
 
     for y in range(0, 14):
         for x in range(0, 16):
             fontChar = str(unichr(charTableNr[charNr]))
             charNr = charNr + 1
-            layer = pdb.gimp_text_fontname(image, None, x*width, y*height, fontChar, 0, True, size, PIXELS, font)
+            layer = pdb.gimp_text_fontname(image, None, x*width, y*height, fontChar, 0, antialias, size, PIXELS, font)
 
     # Create window
     gimp.Display(image)
@@ -56,10 +85,12 @@ register(
     "Otclient font create...",
     "",
     [
+        (PF_OPTION, "cp", "Code page", 0, ["cp1252", "cp1250"]),
         (PF_FONT, "font", "Font", "Arial"),
         (PF_SPINNER, "size", "Font size", 20, (1, 3000, 1)),
         (PF_INT, "height", "Letter height", 20),
         (PF_INT, "width", "Letter width", 20),
+        (PF_BOOL, "antialias", "Antialias", True),
         (PF_COLOUR, "color", "Text color", "#FFFFFF")
     ],
     [],
