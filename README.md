@@ -12,6 +12,6 @@ Result:
 
 ![Choose from menu](https://dl.getdropbox.com/s/jyxags3pi03lnpj/OTC_FC_Select_Choose.png)
 
-3) Select your configuration from scipt menu.
+3) Select your configuration from script menu.
 
-![Choose from script menu](https://dl.getdropbox.com/s/m6k2ukk5d6j31cz/OTC_FC_Option_Menu.png)
+![Choose from script menu](https://dl.getdropbox.com/s/x4pwm2h10flgtzj/OTC_FC_Option_Menu_2.png)
